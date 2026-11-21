@@ -92,3 +92,7 @@ The app opens with this demo model so you can try every tool straight away: [Lit
 - In-app update checks find new GitHub releases.
 - Builds without Apple credentials are ad-hoc signed and use manual installation; automatic installation requires Apple signing credentials.
 - Presets, budgets, and history survive app updates.
+
+## License
+
+GLB Viewer's original source code and documentation are available under the [MIT License](LICENSE). Third-party dependencies and assets, including the Littlest Tokyo demo model, retain their own licenses.
