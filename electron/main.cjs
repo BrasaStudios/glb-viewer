@@ -145,14 +145,15 @@ app.whenReady().then(() => {
   const iconPath = path.join(__dirname, "../assets/icon.png");
   const icon = nativeImage.createFromPath(iconPath);
   if (process.platform === "darwin" && !icon.isEmpty()) app.dock?.setIcon(icon);
-  app.setAboutPanelOptions({
-    applicationName: "GLB Viewer",
-    applicationVersion: app.getVersion(),
-    version: "",
-    copyright: "© " + new Date().getFullYear() + " Cullen Webber",
-    credits: "A local workspace for glTF and Three.js.",
-    iconPath,
-  });
+  if (process.platform === "darwin" || process.platform === "linux")
+    app.setAboutPanelOptions({
+      applicationName: "GLB Viewer",
+      applicationVersion: app.getVersion(),
+      version: "",
+      copyright: "\u00a9 " + new Date().getFullYear() + " Cullen Webber",
+      credits: "A local workspace for glTF and Three.js.",
+      iconPath,
+    });
   const { autoUpdater } = require("electron-updater");
   updates = require("./pipeline/updates.cjs").createUpdates({
     app,
@@ -161,8 +162,14 @@ app.whenReady().then(() => {
     fetch: net.fetch,
     send: (state) => window?.webContents.send("update-state", state),
   });
+  const checkUpdates = async () => {
+    if (process.platform === "darwin") return updates.check();
+    const state = { status: "unpublished", availableVersion: null };
+    window?.webContents.send("update-state", { ...updates.state(), ...state });
+    return state;
+  };
   ipcMain.handle("update-state", () => updates.state());
-  ipcMain.handle("check-updates", () => updates.check());
+  ipcMain.handle("check-updates", checkUpdates);
   ipcMain.handle("download-update", () => updates.download());
   ipcMain.handle("install-update", () => {
     if (optimizerSession?.busy || batch)
@@ -544,8 +551,12 @@ app.whenReady().then(() => {
     minHeight: 640,
     title: "GLB Viewer",
     backgroundColor: "#000000",
-    titleBarStyle: "hiddenInset",
-    trafficLightPosition: { x: 20, y: 23 },
+    ...(process.platform === "darwin"
+      ? {
+          titleBarStyle: "hiddenInset",
+          trafficLightPosition: { x: 20, y: 23 },
+        }
+      : { autoHideMenuBar: true }),
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
       nodeIntegration: false,
@@ -560,7 +571,11 @@ app.whenReady().then(() => {
   else window.loadURL("viewer://app/index.html");
   ipcMain.on("renderer-ready", () => {
     rendererReady = true;
-    if (app.isPackaged && !process.argv.includes("--dev")) {
+    if (
+      process.platform === "darwin" &&
+      app.isPackaged &&
+      !process.argv.includes("--dev")
+    ) {
       const timer = setTimeout(() => void updates.check(), 15000);
       timer.unref();
     }
@@ -585,9 +600,9 @@ app.whenReady().then(() => {
         submenu: [
           { role: "about" },
           {
-            label: "Check for updates…",
+            label: "Check for updates\u2026",
             click: async () => {
-              await updates.check();
+              await checkUpdates();
               window.webContents.send("show-updates");
             },
           },
@@ -605,7 +620,7 @@ app.whenReady().then(() => {
         label: "File",
         submenu: [
           {
-            label: "Open Model…",
+            label: "Open Model\u2026",
             accelerator: "CmdOrCtrl+O",
             click: async () => {
               const model = await choose();

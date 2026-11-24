@@ -2,7 +2,7 @@
 
 **Shrink, inspect, and prepare GLB models for Three.js.** A local-first Mac app that compresses textures to KTX2, optimizes geometry, and shows exactly what changed. Your models never leave your computer.
 
-[**Download for Mac**](https://github.com/cullenwebber/glb-viewer/releases/latest) · [User guide](docs/user-guide.md) · [Blender bridge](docs/blender-bridge.md)
+[**Download for Mac**](https://github.com/cullenwebber/glb-viewer/releases/latest) | [User guide](docs/user-guide.md) | [Blender bridge](docs/blender-bridge.md)
 
 ![GLB Viewer inspecting an animated model](docs/screenshots/model.png)
 
@@ -11,7 +11,7 @@
 1. Download the DMG from the [latest release](https://github.com/cullenwebber/glb-viewer/releases/latest): **arm64** for Apple Silicon or **x64** for Intel.
 2. Open it and drag **GLB Viewer** into Applications.
 3. Open the app. macOS will warn you the first time because builds aren't notarized by Apple yet.
-4. Go to **System Settings → Privacy & Security** and click **Open Anyway**.
+4. Go to **System Settings > Privacy & Security** and click **Open Anyway**.
 
 If macOS still won't open it, run `xattr -cr "/Applications/GLB Viewer.app"` in Terminal.
 
@@ -85,6 +85,46 @@ The app opens with this demo model so you can try every tool straight away: [Lit
 - Package: `npm run package:mac`
 - Build DMG/ZIP: `npm run dist:mac`
 - Built with Electron, React, Three.js, and [shadcn/ui](https://ui.shadcn.com/).
+
+## Windows
+
+Requires Windows 11, Node.js 22.12+ and npm. From the repository root in
+PowerShell, install dependencies and build the unpacked app:
+
+```powershell
+npm ci
+npm run package:win
+```
+
+Use `npm run dist:win` instead to build a portable executable in `release`.
+Build and launch with `npm run desktop:win`, or run the unpacked executable
+directly. Pass a model path as its argument to open that model:
+
+```powershell
+& ".\release\win-unpacked\GLB Viewer.exe"
+& ".\release\win-unpacked\GLB Viewer.exe" "C:\Models\model.glb"
+```
+
+Windows uses a standard window frame with an automatically hidden menu bar.
+It does not check for updates or auto-update. Builds are unsigned, so Windows
+SmartScreen may warn when opening the portable build.
+
+Run the test suite with `npm test`. To test the packaged app, set
+`SMOKE_APP_PATH` to its executable; the Electron tests use it in place of the
+development build:
+
+```powershell
+$env:SMOKE_APP_PATH = "$PWD\release\win-unpacked\GLB Viewer.exe"
+node scripts/smoke-test.mjs
+npm run test:open-file
+# Or run the full suite against the packaged app:
+npm test
+Remove-Item Env:SMOKE_APP_PATH
+```
+
+The open-file test opens `assets/samples/LittlestTokyo.glb` by default.
+Set `OPEN_FILE_TEST_GLB` to test another model and `OPEN_FILE_TEST_SHOT` to
+choose the screenshot path.
 
 ## Releases and updates
 
