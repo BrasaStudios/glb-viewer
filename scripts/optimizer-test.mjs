@@ -434,6 +434,6 @@ async function test() {
     await rm(directory, { recursive: true, force: true });
   }
 }
-// Compare file paths, not a path with a URL pathname: on Windows the pathname reads "/E:/Claude%20Code/..." and
-// the test body silently never ran.
+// Compare file paths, not a file path with a URL pathname: on Windows the pathname reads "/C:/..." and the test
+// body silently never ran.
 if (path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await test();

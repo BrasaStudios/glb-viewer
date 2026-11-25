@@ -313,7 +313,7 @@ export class Optimizer {
     }
     const packed = [];
     for (const [packIndex, pack] of (plan.packs || []).entries()) {
-      progress(`Packing texture ${packIndex + 1}\u2026`);
+      progress(`Packing texture ${packIndex + 1}…`);
       const material = doc.getRoot().listMaterials()[pack.material];
       assert(material, "Choose a material for the packed texture.");
       assert(
@@ -478,14 +478,14 @@ export class Optimizer {
       };
       clearBridge(texture);
       progress(
-        `Removing ${texture.getName() || "texture"} from the optimized model\u2026`,
+        `Removing ${texture.getName() || "texture"} from the optimized model…`,
       );
       changes.delete(texture);
       texture.dispose();
     }
     for (const [texture, settings] of changes) {
       progress(
-        `Processing ${texture.getName() || texture.getURI() || ids.get(texture)}\u2026`,
+        `Processing ${texture.getName() || texture.getURI() || ids.get(texture)}…`,
       );
       const options = textureCompression(settings.format, settings.compression);
       const row = await this.describeTextureSafety(texture);
@@ -578,7 +578,7 @@ export class Optimizer {
         )
       )
         extension.dispose();
-    progress("Compressing geometry\u2026");
+    progress("Compressing geometry…");
     if (plan.geometry === "draco")
       await doc.transform(
         weld(),
@@ -605,11 +605,11 @@ export class Optimizer {
         accessor.setBuffer(buffers[0]);
       for (const buffer of buffers.slice(1)) buffer.dispose();
     }
-    progress("Measuring output\u2026");
+    progress("Measuring output…");
     const output = await this.io.writeBinary(doc);
     this.lods = [];
     for (const [index, lodRatio] of optimization.lods.entries()) {
-      progress(`Generating LOD ${index + 1}\u2026`);
+      progress(`Generating LOD ${index + 1}…`);
       const lod = cloneDocument(lodBase);
       await optimizeGeometry(
         lod,

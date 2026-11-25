@@ -145,15 +145,14 @@ app.whenReady().then(() => {
   const iconPath = path.join(__dirname, "../assets/icon.png");
   const icon = nativeImage.createFromPath(iconPath);
   if (process.platform === "darwin" && !icon.isEmpty()) app.dock?.setIcon(icon);
-  if (process.platform === "darwin" || process.platform === "linux")
-    app.setAboutPanelOptions({
-      applicationName: "GLB Viewer",
-      applicationVersion: app.getVersion(),
-      version: "",
-      copyright: "\u00a9 " + new Date().getFullYear() + " Cullen Webber",
-      credits: "A local workspace for glTF and Three.js.",
-      iconPath,
-    });
+  app.setAboutPanelOptions({
+    applicationName: "GLB Viewer",
+    applicationVersion: app.getVersion(),
+    version: "",
+    copyright: "© " + new Date().getFullYear() + " Cullen Webber",
+    credits: "A local workspace for glTF and Three.js.",
+    iconPath,
+  });
   const { autoUpdater } = require("electron-updater");
   updates = require("./pipeline/updates.cjs").createUpdates({
     app,
@@ -600,7 +599,7 @@ app.whenReady().then(() => {
         submenu: [
           { role: "about" },
           {
-            label: "Check for updates\u2026",
+            label: "Check for updates…",
             click: async () => {
               await checkUpdates();
               window.webContents.send("show-updates");
@@ -620,7 +619,7 @@ app.whenReady().then(() => {
         label: "File",
         submenu: [
           {
-            label: "Open Model\u2026",
+            label: "Open Model…",
             accelerator: "CmdOrCtrl+O",
             click: async () => {
               const model = await choose();

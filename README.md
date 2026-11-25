@@ -2,7 +2,7 @@
 
 **Shrink, inspect, and prepare GLB models for Three.js.** A local-first Mac app that compresses textures to KTX2, optimizes geometry, and shows exactly what changed. Your models never leave your computer.
 
-[**Download for Mac**](https://github.com/cullenwebber/glb-viewer/releases/latest) | [User guide](docs/user-guide.md) | [Blender bridge](docs/blender-bridge.md)
+[**Download for Mac**](https://github.com/cullenwebber/glb-viewer/releases/latest) · [User guide](docs/user-guide.md) · [Blender bridge](docs/blender-bridge.md)
 
 ![GLB Viewer inspecting an animated model](docs/screenshots/model.png)
 
@@ -11,7 +11,7 @@
 1. Download the DMG from the [latest release](https://github.com/cullenwebber/glb-viewer/releases/latest): **arm64** for Apple Silicon or **x64** for Intel.
 2. Open it and drag **GLB Viewer** into Applications.
 3. Open the app. macOS will warn you the first time because builds aren't notarized by Apple yet.
-4. Go to **System Settings > Privacy & Security** and click **Open Anyway**.
+4. Go to **System Settings → Privacy & Security** and click **Open Anyway**.
 
 If macOS still won't open it, run `xattr -cr "/Applications/GLB Viewer.app"` in Terminal.
 
